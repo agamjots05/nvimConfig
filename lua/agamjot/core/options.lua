@@ -1,4 +1,6 @@
-vim.cmd("let g:netrw_liststyle = 3")
+-- disable netrw early so nvim-tree can take over
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 local opt = vim.opt -- for conciseness
 
@@ -7,8 +9,9 @@ opt.relativenumber = true -- show relative line numbers
 opt.number = true -- shows absolute line number on cursor line (when relative number is on)
 
 -- tabs & indentation
-opt.tabstop = 4 -- 4 spaces for tabs (prettier default)
-opt.shiftwidth = 2 -- 2 spaces for indent width
+opt.tabstop = 4
+opt.shiftwidth = 4
+opt.softtabstop = 4
 opt.expandtab = true -- expand tab to spaces
 opt.autoindent = true -- copy indent from current line when starting new one
 
