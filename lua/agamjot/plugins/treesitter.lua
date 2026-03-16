@@ -41,13 +41,19 @@ return {
       end,
     })
 
-    -- Use cindent for JS/TS/HTML — handles (), {}, [] indentation reliably.
-    -- Treesitter indentexpr returns 0 for empty parens (invalid JS syntax),
-    -- which breaks autopairs' CR auto-indent for ().
+    -- Treesitter handles tags correctly but returns 0 for empty parens.
+    -- cindent handles parens correctly but mangles HTML/JSX tags.
+    -- This indentexpr tries treesitter first, falls back to cindent.
+    _G._indent_fallback = function()
+      local ts = require("nvim-treesitter").indentexpr()
+      if ts >= 0 then return ts end
+      return vim.fn.cindent(vim.v.lnum)
+    end
+
     vim.api.nvim_create_autocmd("FileType", {
       pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact", "html" },
       callback = function()
-        vim.opt_local.cindent = true
+        vim.opt_local.indentexpr = "v:lua._indent_fallback()"
         vim.opt_local.smartindent = false
       end,
     })
